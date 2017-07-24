@@ -12,7 +12,8 @@
                 scope: {
                     options: '=?',
                     onChange: '&?',
-                    onClick: '&?'
+                    onClick: '&?',
+                    dateFormat: '=?'
                 },
                 link: function ($scope, $element, $attrs, ngModel) {
                     var dpElement = $element.parent().hasClass('input-group') ? $element.parent() : $element;
@@ -32,7 +33,12 @@
                         } else if (ngModel.$viewValue) {
                             // otherwise make sure it is moment object
                             if (!moment.isMoment(ngModel.$viewValue)) {
-                                ngModel.$setViewValue(moment(ngModel.$viewValue));
+                                if ($scope.dateFormat) {
+                                    ngModel.$setViewValue(moment(ngModel.$viewValue, $scope.dateFormat));
+                                } else {
+                                    ngModel.$setViewValue(moment(ngModel.$viewValue));
+                                }
+
                             }
                             dpElement.data('DateTimePicker').date(ngModel.$viewValue);
                         }
