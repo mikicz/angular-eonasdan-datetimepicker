@@ -38,7 +38,6 @@
                                 } else {
                                     ngModel.$setViewValue(moment(ngModel.$viewValue));
                                 }
-
                             }
                             dpElement.data('DateTimePicker').date(ngModel.$viewValue);
                         }
@@ -61,7 +60,6 @@
                         }
                     });
 
-
                     dpElement.on('click', function () {
                         $timeout(function () {
                             if (typeof $scope.onClick === 'function') {
@@ -70,7 +68,25 @@
                         });
                     });
 
+                    // when the ngmodel value is empty but the element value is set (eg from backend rendering) lets set the value
+                    var $$element = $($element);
+                    var set_default_value = "";
+
+                    if (!ngModel.$viewValue && $$element.val().length) {
+                        set_default_value = $$element.val();
+                    }
+
                     dpElement.datetimepicker($scope.options);
+
+                    if (set_default_value.length) {
+                        if ($scope.dateFormat) {
+                            ngModel.$setViewValue(moment(set_default_value, $scope.dateFormat));
+                            ngModel.$render();
+                        } else {
+                            ngModel.$setViewValue(moment(set_default_value));
+                            ngModel.$render();
+                        }
+                    }
                 }
             };
         }
